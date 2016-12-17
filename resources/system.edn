@@ -1,12 +1,13 @@
 {:components
  {:app  #var duct.component.handler/handler-component
-  :http #var ring.component.jetty/jetty-server}
+  :http #var ring.component.jetty/jetty-server
+  :datomic remoting.example.component.datomic/datomic-component}
  :endpoints
  {:api #var remoting.example.endpoint.api/api-endpoint}
  :dependencies
  {:http [:app]
   :app  [:api]
-  :api []}
+  :api  [:datomic]}
  :config
  {:app
   {:middleware
@@ -40,4 +41,6 @@
                   :content-types          true
                   :default-charset        "utf-8"}}}}}
   :http
-  {:port http-port}}}
+  {:port http-port}
+  :datomic
+  {:uri "datomic:mem://jobstreamer"}}}

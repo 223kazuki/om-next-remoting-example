@@ -15,7 +15,12 @@
                  [org.slf4j/slf4j-nop "1.7.21"]
                  [org.webjars/normalize.css "3.0.2"]
                  [org.omcljs/om "1.0.0-alpha42"]
-                 [org.clojure/core.async "0.2.395"]]
+                 [org.clojure/core.async "0.2.395"]
+                 [sablono "0.7.6"]
+                 [com.datomic/datomic-free "0.9.5544"
+                  :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-nop
+                               org.slf4j/slf4j-log4j12 org.slf4j/log4j-over-slf4j
+                               com.amazonaws/aws-java-sdk]]]
   :plugins [[lein-environ "1.0.3"]
             [lein-cljsbuild "1.1.2"]]
   :main ^:skip-aot remoting.example.main

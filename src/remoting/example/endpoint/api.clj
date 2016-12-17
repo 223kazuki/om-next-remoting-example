@@ -1,7 +1,15 @@
 (ns remoting.example.endpoint.api
   (:require [compojure.core :refer :all]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [remoting.example.component.datomic :as d]))
 
-(defn api-endpoint [config]
+(defn get-todos [datomic]
+  (d/query datomic
+           '[:find [(pull ?t [*]) ...]
+             :where [?t :todo/title]]))
+
+
+(defn api-endpoint [{:keys [datomic]}]
   (context "/api" []
-    (GET "/" [] "OK")))
+           (GET "/ping" [] "pong")
+           (GET "/todos" [] (str (get-todos datomic)))))
