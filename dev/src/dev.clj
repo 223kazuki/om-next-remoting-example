@@ -8,7 +8,8 @@
             [duct.generate :as gen]
             [duct.util.repl :refer [setup test cljs-repl migrate rollback]]
             [duct.util.system :refer [load-system]]
-            [reloaded.repl :refer [system init start stop go reset]]))
+            [reloaded.repl :refer [system init start stop go reset]]
+            [alembic.still :refer [load-project]]))
 
 (defn new-system []
   (load-system (keep io/resource ["system.edn" "dev.edn" "local.edn"])))

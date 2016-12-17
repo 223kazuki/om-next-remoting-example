@@ -13,7 +13,8 @@
                  [ring-jetty-component "0.3.1"]
                  [ring-webjars "0.1.1"]
                  [org.slf4j/slf4j-nop "1.7.21"]
-                 [org.webjars/normalize.css "3.0.2"]]
+                 [org.webjars/normalize.css "3.0.2"]
+                 [org.omcljs/om "1.0.0-alpha47"]]
   :plugins [[lein-environ "1.0.3"]
             [lein-cljsbuild "1.1.2"]]
   :main ^:skip-aot remoting.example.main
@@ -47,7 +48,8 @@
                                   [binaryage/devtools "0.8.2"]
                                   [com.cemerick/piggieback "0.2.1"]
                                   [duct/figwheel-component "0.3.3"]
-                                  [figwheel "0.5.8"]]
+                                  [figwheel "0.5.8"]
+                                  [alembic "0.3.2"]]
                    :source-paths   ["dev/src"]
                    :resource-paths ["dev/resources"]
                    :repl-options {:init-ns user
