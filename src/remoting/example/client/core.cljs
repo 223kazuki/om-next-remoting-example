@@ -9,9 +9,7 @@
   (:import [goog Uri]
            [goog.net Jsonp]))
 
-(enable-console-print!)
-
-(def app-state (atom {:search/results []}))
+(defonce app-state (atom {:search/results []}))
 
 (def base-url
   "http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=")
@@ -39,7 +37,7 @@
 
 (def send-chan (chan))
 
-(def reconciler
+(defonce reconciler
   (om/reconciler
     {:state   app-state
      :parser  (om/parser {:read read})
