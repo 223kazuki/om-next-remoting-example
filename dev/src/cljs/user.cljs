@@ -1,7 +1,7 @@
 (ns cljs.user
   (:require [devtools.core :as devtools]
             [figwheel.client :as figwheel]
-            [remoting.example.client :as client]))
+            [remoting.example.client.core :as core]))
 
 (js/console.info "Starting in development mode")
 
@@ -14,4 +14,4 @@
 (defn log [& args]
   (.apply js/console.log js/console (apply array args)))
 
-(client/init!)
+(core/init!)
