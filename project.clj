@@ -14,7 +14,8 @@
                  [ring-webjars "0.1.1"]
                  [org.slf4j/slf4j-nop "1.7.21"]
                  [org.webjars/normalize.css "3.0.2"]
-                 [org.omcljs/om "1.0.0-alpha47"]]
+                 [org.omcljs/om "1.0.0-alpha42"]
+                 [org.clojure/core.async "0.2.395"]]
   :plugins [[lein-environ "1.0.3"]
             [lein-cljsbuild "1.1.2"]]
   :main ^:skip-aot remoting.example.main
@@ -29,7 +30,6 @@
      :compiler
      {:output-to     "target/cljsbuild/public/js/main.js"
       :optimizations :advanced}}]}
-  :aliases {"setup"  ["run" "-m" "duct.util.repl/setup"]}
   :profiles
   {:dev  [:project/dev  :profiles/dev]
    :test [:project/test :profiles/test]
@@ -38,8 +38,7 @@
    :uberjar {:aot :all}
    :profiles/dev  {}
    :profiles/test {}
-   :project/dev   {:dependencies [[duct/generate "0.8.2"]
-                                  [reloaded.repl "0.2.3"]
+   :project/dev   {:dependencies [[reloaded.repl "0.2.3"]
                                   [org.clojure/tools.namespace "0.2.11"]
                                   [org.clojure/tools.nrepl "0.2.12"]
                                   [eftest "0.1.1"]

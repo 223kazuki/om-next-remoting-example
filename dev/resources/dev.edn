@@ -8,7 +8,7 @@
   :http
   {:port 3000}
   :figwheel
-  {:css-dirs ["resources/om_next_remoting_example/public/css"]
+  {:css-dirs ["resources/public/css"]
    :builds
    [{:id "dev"
      :source-paths ["src" "dev"]
@@ -19,4 +19,5 @@
       :output-to  "target/figwheel/public/js/main.js"
       :output-dir "target/figwheel/public/js"
       :source-map true
-      :source-map-path "/js"}}]}}}
+      :source-map-path "/js"
+      :verbose true}}]}}}
