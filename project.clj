@@ -15,8 +15,8 @@
                  [org.slf4j/slf4j-nop "1.7.21"]
                  [org.webjars/normalize.css "3.0.2"]
                  [org.omcljs/om "1.0.0-alpha42"]
-                 [org.clojure/core.async "0.2.395"]
                  [sablono "0.7.6"]
+                 [org.clojure/core.async "0.2.395"]
                  [com.datomic/datomic-free "0.9.5544"
                   :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-nop
                                org.slf4j/slf4j-log4j12 org.slf4j/log4j-over-slf4j

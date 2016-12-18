@@ -4,10 +4,23 @@
 
 (defmulti read om/dispatch)
 
-(defmethod read :search/results
-  [{:keys [state ast] :as env} k {:keys [query]}]
-  (merge
-    {:value (get @state k [])}
-    (when-not (or (string/blank? query)
-                  (< (count query) 3))
-      {:search ast})))
+(defmethod read :dashboard/items
+  [{:keys [state ast]} k _]
+  (let [st @state]
+    {:value   (into [] (map #(get-in st %)) (get st k))
+     :dynamic (update-in ast [:query]
+                #(->> (for [[k _] %]
+                        [k [:favorites]])
+                  (into {})))
+     :static  (update-in ast [:query]
+                #(->> (for [[k v] %]
+                        [k (into [] (remove #{:favorites}) v)])
+                  (into {})))}))
+
+(defmulti mutate om/dispatch)
+
+(defmethod mutate 'dashboard/favorite
+  [{:keys [state]} k {:keys [ref]}]
+  {:action
+   (fn []
+     (swap! state update-in (conj ref :favorites) inc))})

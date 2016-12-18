@@ -1,50 +1,54 @@
 (ns remoting.example.client.core
-  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [goog.dom :as gdom]
-            [cljs.core.async :as async :refer [<! >! put! chan]]
             [om.next :as om]
-            [remoting.example.client.parser :refer [read]]
+            [remoting.example.client.parser :refer [read mutate]]
             [remoting.example.client.view :as view]
             [cognitect.transit :as transit])
-  (:import [goog Uri]
-           [goog.net Jsonp]))
+  (:import [goog.net XhrIo]))
 
-(defonce app-state (atom {:search/results []}))
-
-(def base-url
-  "http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=")
-
-(defn jsonp
-  ([uri] (jsonp (chan) uri))
-  ([c uri]
-   (let [gjsonp (Jsonp. (Uri. uri))]
-     (.send gjsonp nil #(put! c %))
-     c)))
-
-(defn search-loop [c]
-  (go
-    (loop [[query cb] (<! c)]
-      (let [[_ results] (<! (jsonp (str base-url query)))]
-        (cb {:search/results results}))
-      (recur (<! c)))))
-
-(defn send-to-chan [c]
-  (fn [{:keys [search]} cb]
-    (when search
-      (let [{[search] :children} (om/query->ast search)
-            query (get-in search [:params :query])]
-        (put! c [query cb])))))
-
-(def send-chan (chan))
+(defonce init-data
+  {:dashboard/items
+   [{:id 0 :type :dashboard/post
+     :author "Laura Smith"
+     :title "A Post!"
+     :content "Lorem ipsum dolor sit amet, quem atomorum te quo"
+     :favorites 0}
+    {:id 1 :type :dashboard/photo
+     :title "A Photo!"
+     :image "photo.jpg"
+     :caption "Lorem ipsum"
+     :favorites 0}
+    {:id 2 :type :dashboard/post
+     :author "Jim Jacobs"
+     :title "Another Post!"
+     :content "Lorem ipsum dolor sit amet, quem atomorum te quo"
+     :favorites 0}
+    {:id 3 :type :dashboard/graphic
+     :title "Charts and Stufff!"
+     :image "chart.jpg"
+     :favorites 0}
+    {:id 4 :type :dashboard/post
+     :author "May Fields"
+     :title "Yet Another Post!"
+     :content "Lorem ipsum dolor sit amet, quem atomorum te quo"
+     :favorites 0}]})
 
 (defonce reconciler
   (om/reconciler
-    {:state   app-state
-     :parser  (om/parser {:read read})
-     :send    (send-to-chan send-chan)
-     :remotes [:search]}))
+    {:state     init-data
+     :parser    (om/parser {:read read :mutate mutate})
+     :send      (fn [{:keys [remote]} cb]
+                  (.send XhrIo "/api/query"
+                         (fn [e]
+                           (this-as this
+                                    (cb (transit/read (om/reader :json) (.getResponseText this)))))
+                         "POST" (transit/write (om/writer :json) remote)
+                         #js {"Content-Type" "application/transit+json"}))}))
+
+(defonce root (atom nil))
 
 (defn init! []
-  (search-loop send-chan)
-  (om/add-root! reconciler view/AutoCompleter
-                (gdom/getElement "app")))
+  (if (nil? @root)
+    (om/add-root! reconciler view/Dashboard
+                  (gdom/getElement "app"))
+    (.forceUpdate (om/class->any reconciler view/Dashboard))))

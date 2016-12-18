@@ -2,34 +2,90 @@
   (:require [om.next :as om :refer-macros [defui]]
             [sablono.core :refer-macros [html]]))
 
-(defn result-list [results]
-  (html
-    [:ul {:key "result-list"}
-     (map #(vec [:li {:key %} %]) results)]))
-
-(defn search-field [ac query]
-  (html
-    [:input
-     {:key "search-field"
-      :value query
-      :onChange
-      (fn [e]
-        (om/set-query! ac
-                       {:params {:query (.. e -target -value)}}))}]))
-
-(defui AutoCompleter
-  static om/IQueryParams
-  (params [_]
-          {:query ""})
+(defui ^:once Post
   static om/IQuery
-  (query [_]
-         '[(:search/results {:query ?query})])
+  (query [this]
+         [:id :type :title :author :content])
   Object
   (render [this]
-          (let [{:keys [search/results]} (om/props this)]
-            (html
-              [:div 
-               [:h2 "Autocompleter?"]
-               (cond->
-                 [(search-field this (:query (om/get-params this)))]
-                 (not (empty? results)) (conj (result-list results)))]))))
+          (html
+            (let [{:keys [title author content] :as props} (om/props this)]
+              [:div
+               [:h3 title]
+               [:h4 author]
+               [:p content]]))))
+
+(def post (om/factory Post))
+
+(defui ^:once Photo
+  static om/IQuery
+  (query [this]
+         [:id :type :title :image :caption])
+  Object
+  (render [this]
+          (html
+            (let [{:keys [title image caption]} (om/props this)]
+              [:div
+               [:h3 (str "Photo: " title)]
+               [:div image]
+               [:p (str "Caption: " caption)]]))))
+
+(def photo (om/factory Photo))
+
+(defui ^:once Graphic
+  static om/IQuery
+  (query [this]
+         [:id :type :title :image])
+  Object
+  (render [this]
+          (html
+            (let [{:keys [title image]} (om/props this)]
+              [:div
+               [:h3 (str "Graphic: " title)]
+               [:div image]]))))
+
+(def graphic (om/factory Graphic))
+
+(defui ^:once DashboardItem
+  static om/Ident
+  (ident [this {:keys [id type]}]
+         [type id])
+  static om/IQuery
+  (query [this]
+         (zipmap
+           [:dashboard/post :dashboard/photo :dashboard/graphic]
+           (map #(conj % :favorites)
+                [(om/get-query Post)
+                 (om/get-query Photo)
+                 (om/get-query Graphic)])))
+  Object
+  (render [this]
+          (html
+            (let [{:keys [id type favorites] :as props} (om/props this)]
+              [:li {:key id :style {:padding 10 :borderBottom "1px solid black"}}
+               [:div
+                (({:dashboard/post    post
+                   :dashboard/photo   photo
+                   :dashboard/graphic graphic} type)
+                 (om/props this))]
+               [:div
+                [:p (str "Favorites: " favorites)]
+                [:button
+                 {:onClick
+                  (fn [e]
+                    (om/transact! this
+                                  `[(dashboard/favorite {:ref [~type ~id]})]))}
+                 "Favorite!"]]]))))
+
+(def dashboard-item (om/factory DashboardItem))
+
+(defui ^:once Dashboard
+  static om/IQuery
+  (query [this]
+         [{:dashboard/items (om/get-query DashboardItem)}])
+  Object
+  (render [this]
+          (html
+            (let [{:keys [dashboard/items]} (om/props this)]
+              [:ul {:style {:padding 0}}
+               (map dashboard-item items)]))))
