@@ -89,3 +89,24 @@
             (let [{:keys [dashboard/items]} (om/props this)]
               [:ul {:style {:padding 0}}
                (map dashboard-item items)]))))
+
+(defui ^:once Product
+  static om/IQuery
+  (query [this]
+         [:product/id :product/name :product/price])
+  Object
+  (render [this]
+          (html [:h2 "product"])))
+
+
+
+(defui ^:once Market
+  static om/IQuery
+  (query [this]
+         [:list/products])
+  Object
+  (render [this]
+          (html
+            (let [{:keys [list/products]} (om/props this)]
+              [:ul {:style {:padding 0}}
+               (map #(vec [:li {:key (:product/number %)} (str (:product/name %) ":" (:product/price %))]) products)]))))

@@ -9,6 +9,13 @@
 
 (defmulti read om/dispatch)
 
+(defmethod read :list/products
+  [{:keys [state ast datomic] :as env} k {:keys [query]}]
+  (let [v (d/query datomic
+                   '[:find [(pull ?p [*]) ...]
+                     :where [?p :product/number]])]
+    {:value v}))
+
 (defmethod read :default
   [{:keys [state ast] :as env} k {:keys [query]}]
   "OK")
@@ -16,12 +23,12 @@
 (def remote-parser
   (om/parser {:read read}))
 
-(defn handle-query [req]
-  (let [query (transit/read (om/reader (:body req) :json))
-        result (remote-parser nil query)]
+(defn handle-query [datomic req]
+  (let [query (transit/read (transit/reader (:body req) :json))
+        result (remote-parser {:datomic datomic} query)]
     {:status 200
      :body (let [out-stream (ByteArrayOutputStream.)]
-             (transit/write (om/writer out-stream :json) result)
+             (transit/write (transit/writer out-stream :json) result)
              (.toString out-stream))}))
 
 (defn get-todos [datomic]
@@ -32,4 +39,4 @@
 (defn api-endpoint [{:keys [datomic]}]
   (context "/api" []
            (GET "/ping" [] "pong")
-           (POST "/query" req (handle-query req))))
+           (POST "/query" req (handle-query datomic req))))

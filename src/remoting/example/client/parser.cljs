@@ -4,18 +4,25 @@
 
 (defmulti read om/dispatch)
 
-(defmethod read :dashboard/items
+; (defmethod read :dashboard/items
+;   [{:keys [state ast]} k _]
+;   (let [st @state]
+;     {:value   (into [] (map #(get-in st %)) (get st k))
+;      :dynamic (update-in ast [:query]
+;                 #(->> (for [[k _] %]
+;                         [k [:favorites]])
+;                   (into {})))
+;      :static  (update-in ast [:query]
+;                 #(->> (for [[k v] %]
+;                         [k (into [] (remove #{:favorites}) v)])
+;                   (into {})))}))
+
+(defmethod read :list/products
   [{:keys [state ast]} k _]
   (let [st @state]
-    {:value   (into [] (map #(get-in st %)) (get st k))
-     :dynamic (update-in ast [:query]
-                #(->> (for [[k _] %]
-                        [k [:favorites]])
-                  (into {})))
-     :static  (update-in ast [:query]
-                #(->> (for [[k v] %]
-                        [k (into [] (remove #{:favorites}) v)])
-                  (into {})))}))
+    (if (contains? st k)
+      {:value (into [] (get st :list/products))}
+      {:remote ast})))
 
 (defmulti mutate om/dispatch)
 
