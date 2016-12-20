@@ -7,8 +7,8 @@
   (:import [java.io ByteArrayOutputStream]))
 
 (defmulti read om/dispatch)
-(defmethod read :list/products
-  [{:keys [state ast datomic] :as env} k {:keys [query]}]
+(defmethod read :products/list
+  [{:keys [state ast datomic] :as env} k _]
   (let [v (d/query datomic
                    '[:find [(pull ?p [*]) ...]
                      :where [?p :product/number]])]
@@ -17,8 +17,10 @@
   [{:keys [state ast] :as env} k {:keys [query]}]
   nil)
 
+(defmulti mutate om/dispatch)
+
 (def remote-parser
-  (om/parser {:read read}))
+  (om/parser {:read read :mutate mutate}))
 
 (defn handle-query [datomic req]
   (let [query (transit/read (transit/reader (:body req) :json))
@@ -28,12 +30,6 @@
              (transit/write (transit/writer out-stream :json) result)
              (.toString out-stream))}))
 
-(defn get-todos [datomic]
-  (d/query datomic
-           '[:find [(pull ?t [*]) ...]
-             :where [?t :todo/title]]))
-
 (defn api-endpoint [{:keys [datomic]}]
   (context "/api" []
-           (GET "/ping" [] "pong")
            (POST "/query" req (handle-query datomic req))))
