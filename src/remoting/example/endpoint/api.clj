@@ -1,24 +1,21 @@
 (ns remoting.example.endpoint.api
   (:refer-clojure :exclude [read])
   (:require [compojure.core :refer :all]
-            [clojure.java.io :as io]
             [om.next.server :as om]
             [cognitect.transit :as transit]
             [remoting.example.component.datomic :as d])
   (:import [java.io ByteArrayOutputStream]))
 
 (defmulti read om/dispatch)
-
 (defmethod read :list/products
   [{:keys [state ast datomic] :as env} k {:keys [query]}]
   (let [v (d/query datomic
                    '[:find [(pull ?p [*]) ...]
                      :where [?p :product/number]])]
     {:value v}))
-
 (defmethod read :default
   [{:keys [state ast] :as env} k {:keys [query]}]
-  "OK")
+  nil)
 
 (def remote-parser
   (om/parser {:read read}))
