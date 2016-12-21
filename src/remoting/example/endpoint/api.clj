@@ -8,16 +8,33 @@
 
 (defmulti read om/dispatch)
 (defmethod read :products/list
-  [{:keys [state ast datomic] :as env} k _]
+  [{:keys [datomic] :as env} k _]
   (let [v (d/query datomic
                    '[:find [(pull ?p [*]) ...]
                      :where [?p :product/number]])]
     {:value v}))
-(defmethod read :default
-  [{:keys [state ast] :as env} k {:keys [query]}]
-  nil)
+(defmethod read :products/purchase
+  [{:keys [datomic] :as env} k _]
+  (let [v (->> (d/query datomic
+                        '[:find [(pull ?p [*]) ...]
+                          :where [?p :purchase/product]])
+               (group-by :purchase/product)
+               (map (fn [m] (assoc {}
+                              :purchase/product (key m)
+                              :purchase/count (reduce + (map :purchase/count (val m))))))
+               vec)]
+    {:value v}))
 
 (defmulti mutate om/dispatch)
+(defmethod mutate 'products/purchase
+  [{:keys [datomic]} k {:keys [products/cart]}]
+  (->> cart
+       (map #(assoc {}
+               :db/id (d/tempid :db.part/user)
+               :purchase/product (:product/number %)
+               :purchase/count (:product/in-cart %)))
+       vec
+       (d/transact datomic)))
 
 (def remote-parser
   (om/parser {:read read :mutate mutate}))

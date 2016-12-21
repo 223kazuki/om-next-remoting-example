@@ -19,4 +19,18 @@
   :db/cardinality :db.cardinality/one
   :db/doc "A product's price"
   :db.install/_attribute :db.part/db}
+ ;; Purchase
+ {:db/id #db/id[:db.part/db]
+  :db/ident :purchase/product
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "A product's number"
+  :db.install/_attribute :db.part/db
+  :db/unique :db.unique/identity}
+ {:db/id #db/id[:db.part/db]
+  :db/ident :purchase/count
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "A purchase's count"
+  :db.install/_attribute :db.part/db}
  ]
