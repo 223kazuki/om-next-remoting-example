@@ -43,31 +43,6 @@
                      :onClick (fn [e] (om/transact! this `[(cart/remove-product ~props) :products/cart]))}]]]))))
 (def cart-product (om/factory CartProduct))
 
-(defui ^:once ListView
-  Object
-  (render [this]
-          (let [list (om/props this)]
-            (html
-              [:div
-               [:h2 "Products List"]
-               [:table.list
-                [:tbody
-                 (for [p list]
-                   (list-product p))]]]))))
-(def list-view (om/factory ListView))
-
-(defui ^:once CartView
-  Object
-  (render [this]
-          (let [cart (om/props this)]
-            (html
-              [:div
-               [:h2 "Products Cart"]
-               [:table.cart
-                [:tbody
-                 (map #(cart-product %) cart)]]]))))
-(def cart-view (om/factory CartView))
-
 (defui ^:once RootView
   static om/IQuery
   (query [this]
@@ -82,9 +57,26 @@
               [:div.container
                [:div.raw
                 [:div.col.col-md-8#list
-                 (list-view list)]
+                 [:div
+                  [:h2 "Products List"]
+                  [:table.list
+                   [:tbody
+                    (for [p list]
+                      (list-product p))]]]]
                 [:div.col.col-md-4
                  [:div.raw
                   [:div.col.col-md-12#cart
-                   (cart-view cart)]]
+                   [:div
+                    [:h2 "Products Cart"]
+                    [:div {:style {:width "100%" :margin-bottom "10px"}}
+                     [:labale (str "Sum: $" (->> cart
+                                                 (map #(let [{:keys [product/price product/in-cart] :or {product/in-cart 0}} %]
+                                                         (* price in-cart)))
+                                                 (apply +)))]
+                     [:button {:style {:float "right"}
+                               :onClick (fn [e] (om/transact! this `[(products/purchase ~cart) :products/cart]))}
+                      "Buy"]]
+                    [:table.cart
+                     [:tbody
+                      (map #(cart-product %) cart)]]]]]
                  [:div.raw]]]]))))

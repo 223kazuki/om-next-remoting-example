@@ -16,6 +16,9 @@
 (defmethod read :products/cart
   [{:keys [state] :as env} key params]
   {:value (get-product state key)})
+(defmethod read :default
+  [{:keys [state] :as env} key params]
+  nil)
 
 (defmulti mutate om/dispatch)
 (defmethod mutate 'cart/add-product
@@ -29,6 +32,9 @@
   {:action
    (fn []
      (swap! state update-in [:product/by-number number :product/in-cart] #(if-let [n %] (if (<= n 0)  0 (dec n)) 0)))})
-
-
-
+(defmethod mutate 'products/purchase
+  [{:keys [state ast]} k params]
+  {:action
+   (fn []
+     (println params)
+     (swap! state assoc-in [:products/cart] []))})
