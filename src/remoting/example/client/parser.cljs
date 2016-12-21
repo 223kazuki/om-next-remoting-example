@@ -22,4 +22,13 @@
   [{:keys [state]} k {:keys [product/number]}]
   {:action
    (fn []
-     (swap! state update-in [:products/cart] #(conj % [:product/by-number number ])))})
+     (swap! state update-in [:products/cart] #(set (conj % [:product/by-number number])))
+     (swap! state update-in [:product/by-number number :product/in-cart] #(if-let [n %] (inc n) 1)))})
+(defmethod mutate 'cart/remove-product
+  [{:keys [state]} k {:keys [product/number]}]
+  {:action
+   (fn []
+     (swap! state update-in [:product/by-number number :product/in-cart] #(if-let [n %] (if (<= n 0)  0 (dec n)) 0)))})
+
+
+

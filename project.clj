@@ -14,6 +14,7 @@
                  [ring-webjars "0.1.1"]
                  [org.slf4j/slf4j-nop "1.7.21"]
                  [org.webjars/normalize.css "3.0.2"]
+                 [org.webjars/bootstrap "3.3.7-1"]
                  [org.omcljs/om "1.0.0-alpha42"]
                  [sablono "0.7.6"]
                  [org.clojure/core.async "0.2.395"]

@@ -8,7 +8,7 @@
 
 (defonce reconciler
   (om/reconciler
-    {:state  {:products/cart []}
+    {:state  {}
      :parser (om/parser {:read read :mutate mutate})
      :send   (fn [{query :remote} cb]
                (.send XhrIo "/api/query"
