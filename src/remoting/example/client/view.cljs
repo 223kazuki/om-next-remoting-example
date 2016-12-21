@@ -80,6 +80,12 @@
                  [:div
                   [:h2 "Products List"]
                   [:table.list
+                   [:thead
+                    [:tr
+                     [:th "#"]
+                     [:th "Name"]
+                     [:th "Price"]
+                     [:th]]]
                    [:tbody
                     (for [p list]
                       (list-product p))]]]]
@@ -89,15 +95,22 @@
                    [:div {:style {:min-height "300px"}}
                     [:h2 "Products Cart"]
                     [:div.cartHeader
-                     [:labale (str "Sum: $"
-                                   (->> cart
-                                        (map #(let [{:keys [product/price product/in-cart] :or {product/in-cart 0}} %]
-                                                (* price in-cart)))
-                                        (apply +)))]
+                     [:label (str "Sum: $"
+                                  (->> cart
+                                       (map #(let [{:keys [product/price product/in-cart] :or {product/in-cart 0}} %]
+                                               (* price in-cart)))
+                                       (apply +)))]
                      [:button {:style {:float "right"}
-                               :onClick (fn [e] (om/transact! this `[(products/purchase {:products/cart ~cart}) :products/cart :products/purchase]))}
-                      "Buy"]]
+                               :onClick (fn [e] (om/transact! this `[(products/purchase {:products/cart ~cart})]))}
+                      "Purchase"]]
                     [:table.cart
+                     [:thead
+                      [:tr
+                       [:th "#"]
+                       [:th "Name"]
+                       [:th "Price"]
+                       [:th "In Cart"]
+                       [:th]]]
                      [:tbody
                       (map #(cart-product %) cart)]]]]]
                  [:div.raw
@@ -105,5 +118,11 @@
                    [:div
                     [:h2 "Purchase History"]
                     [:table.purchase
+                     [:thead
+                      [:tr
+                       [:th "#"]
+                       [:th "Name"]
+                       [:th "Price"]
+                       [:th "Count"]]]
                      [:tbody
                       (map #(purchase-product %) purchase)]]]]]]]]))))

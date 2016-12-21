@@ -1,9 +1,14 @@
-table.list {
+table {
   width: 100%;
   border: solid;
 }
 
-table.list tbody tr td {
+table thead tr th {
+  padding-left: 5px;
+  border: solid;
+}
+
+table tbody tr td {
   padding-left: 5px;
   border: solid;
 }
@@ -16,32 +21,12 @@ table.list tbody tr td .add-cart:hover {
   cursor: pointer;
 }
 
-table.cart {
-  width: 100%;
-  border: solid;
-}
-
-table.cart tbody tr td {
-  padding-left: 5px;
-  border: solid;
-}
-
 table.cart tbody tr td .remove-cart {
   margin-left: 10px;
 }
 
 table.cart tbody tr td .remove-cart:hover {
   cursor: pointer;
-}
-
-table.purchase {
-  width: 100%;
-  border: solid;
-}
-
-table.purchase tbody tr td {
-  padding-left: 5px;
-  border: solid;
 }
 
 div.cartHeader {
