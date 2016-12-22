@@ -18,11 +18,11 @@
                         '[:find [(pull ?p [*]) ...]
                           :where [?p :purchase/product]])
                (group-by :purchase/product)
-               (map (fn [m] (assoc {}
-                              :purchase/product (key m)
-                              :purchase/count   (->> (val m)
-                                                     (map :purchase/count)
-                                                     (reduce +)))))
+               (map #(assoc {}
+                       :purchase/product (key %)
+                       :purchase/count   (->> (val %)
+                                              (map :purchase/count)
+                                              (reduce +))))
                vec)]
     {:value v}))
 
