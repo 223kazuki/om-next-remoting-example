@@ -1,6 +1,5 @@
 (ns remoting.example.client.parser
-  (:require [clojure.string :as string]
-            [om.next :as om]))
+  (:require [om.next :as om]))
 
 (defn get-product [state key]
   (let [st @state]
@@ -28,13 +27,16 @@
   [{:keys [state]} k {:keys [product/number]}]
   {:action
    (fn []
-     (swap! state update-in [:products/cart] #(set (conj % [:product/by-number number])))
-     (swap! state update-in [:product/by-number number :product/in-cart] #(if-let [n %] (inc n) 1)))})
+     (swap! state update-in [:products/cart]
+            #(set (conj % [:product/by-number number])))
+     (swap! state update-in [:product/by-number number :product/in-cart]
+            #(if-let [n %] (inc n) 1)))})
 (defmethod mutate 'cart/remove-product
   [{:keys [state]} k {:keys [product/number]}]
   {:action
    (fn []
-     (swap! state update-in [:product/by-number number :product/in-cart] #(if-let [n %] (if (<= n 0)  0 (dec n)) 0)))})
+     (swap! state update-in [:product/by-number number :product/in-cart]
+            #(if-let [n %] (if (<= n 0) 0 (dec n)) 0)))})
 (defmethod mutate 'products/purchase
   [{:keys [state ast]} k {:keys [products/cart]}]
   (merge
@@ -43,8 +45,9 @@
        (swap! state dissoc :products/cart)
        (doall
          (map (fn [{:keys [product/number product/in-cart]}]
-                (swap! state update-in [:products/purchase] #(set (conj % [:product/by-number number])))
-                (swap! state assoc-in [:product/by-number number :product/in-cart] 0)
+                (swap! state update-in [:products/purchase]
+                       #(set (conj % [:product/by-number number])))
+                (swap! state assoc-in  [:product/by-number number :product/in-cart] 0)
                 (swap! state update-in [:product/by-number number :purchase/count]
                        #(if-let [n %] (+ n in-cart) in-cart)))
               cart)))}

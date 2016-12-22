@@ -1,6 +1,6 @@
 (defproject om-next-remoting-example "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Om Next Remoting Example"
+  :url "http://example.com/FIXME" ;; TODO: Qiita URL
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.8.51"]
@@ -17,7 +17,6 @@
                  [org.webjars/bootstrap "3.3.7-1"]
                  [org.omcljs/om "1.0.0-alpha42"]
                  [sablono "0.7.6"]
-                 [org.clojure/core.async "0.2.395"]
                  [com.datomic/datomic-free "0.9.5544"
                   :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-nop
                                org.slf4j/slf4j-log4j12 org.slf4j/log4j-over-slf4j
@@ -53,8 +52,7 @@
                                   [binaryage/devtools "0.8.2"]
                                   [com.cemerick/piggieback "0.2.1"]
                                   [duct/figwheel-component "0.3.3"]
-                                  [figwheel "0.5.8"]
-                                  [alembic "0.3.2"]]
+                                  [figwheel "0.5.8"]]
                    :source-paths   ["dev/src"]
                    :resource-paths ["dev/resources"]
                    :repl-options {:init-ns user

@@ -18,8 +18,8 @@
                [:td name]
                [:td (str "$" price)]
                [:td
-                [:i {:class "add-cart glyphicon glyphicon-shopping-cart"
-                     :onClick (fn [e] (om/transact! this `[(cart/add-product ~props) :products/cart]))}]]]))))
+                [:i.add-cart.glyphicon.glyphicon-shopping-cart
+                 {:onClick (fn [e] (om/transact! this `[(cart/add-product ~props) :products/cart]))}]]]))))
 (def list-product (om/factory ListProduct))
 
 (defui ^:once CartProduct
@@ -39,8 +39,8 @@
                [:td (str "$" price)]
                [:td (or in-cart 0)]
                [:td
-                [:i {:class "remove-cart glyphicon glyphicon-minus"
-                     :onClick (fn [e] (om/transact! this `[(cart/remove-product ~props) :products/cart]))}]]]))))
+                [:i.remove-cart.glyphicon.glyphicon-minus
+                 {:onClick (fn [e] (om/transact! this `[(cart/remove-product ~props) :products/cart]))}]]]))))
 (def cart-product (om/factory CartProduct))
 
 (defui ^:once PurchaseProduct
@@ -52,7 +52,7 @@
          [:product/number :product/name :product/price :purchase/count])
   Object
   (render [this]
-          (let [{:keys [product/number product/name product/price purchase/count] :as props} (om/props this)]
+          (let [{:keys [product/number product/name product/price purchase/count]} (om/props this)]
             (html
               [:tr
                [:td number]
@@ -76,53 +76,49 @@
             (html
               [:div.container
                [:div.raw
-                [:div.col.col-md-8#list
-                 [:div
-                  [:h2 "Products List"]
-                  [:table.list
-                   [:thead
-                    [:tr
-                     [:th "#"]
-                     [:th "Name"]
-                     [:th "Price"]
-                     [:th]]]
-                   [:tbody
-                    (for [p list]
-                      (list-product p))]]]]
+                [:div.col.col-md-8.list
+                 [:h2 "Products List"]
+                 [:table
+                  [:thead
+                   [:tr
+                    [:th "#"]
+                    [:th "Name"]
+                    [:th "Price"]
+                    [:th]]]
+                  [:tbody
+                   (for [p list]
+                     (list-product p))]]]
                 [:div.col.col-md-4
                  [:div.raw
-                  [:div.col.col-md-12#cart
-                   [:div {:style {:min-height "300px"}}
-                    [:h2 "Products Cart"]
-                    [:div.cartHeader
-                     [:label (str "Sum: $"
-                                  (->> cart
-                                       (map #(let [{:keys [product/price product/in-cart] :or {product/in-cart 0}} %]
-                                               (* price in-cart)))
-                                       (apply +)))]
-                     [:button {:style {:float "right"}
-                               :onClick (fn [e] (om/transact! this `[(products/purchase {:products/cart ~cart})]))}
-                      "Purchase"]]
-                    [:table.cart
-                     [:thead
-                      [:tr
-                       [:th "#"]
-                       [:th "Name"]
-                       [:th "Price"]
-                       [:th "In Cart"]
-                       [:th]]]
-                     [:tbody
-                      (map #(cart-product %) cart)]]]]]
+                  [:div.col.col-md-12.cart
+                   [:h2 "Cart"]
+                   [:div.cartHeader
+                    [:label (str "Sum: $"
+                                 (->> cart
+                                      (map #(let [{:keys [product/price product/in-cart] :or {product/in-cart 0}} %]
+                                              (* price in-cart)))
+                                      (apply +)))]
+                    [:button {:onClick (fn [e] (om/transact! this `[(products/purchase {:products/cart ~cart})]))}
+                     "Purchase"]]
+                   [:table
+                    [:thead
+                     [:tr
+                      [:th "#"]
+                      [:th "Name"]
+                      [:th "Price"]
+                      [:th "In Cart"]
+                      [:th]]]
+                    [:tbody
+                     (map #(cart-product %) cart)]]]]
                  [:div.raw
-                  [:div.col.col-md-12#cart
-                   [:div
-                    [:h2 "Purchase History"]
-                    [:table.purchase
-                     [:thead
-                      [:tr
-                       [:th "#"]
-                       [:th "Name"]
-                       [:th "Price"]
-                       [:th "Count"]]]
-                     [:tbody
-                      (map #(purchase-product %) purchase)]]]]]]]]))))
+                  [:div.col.col-md-12.purchase
+                   [:h2 "Purchase History"]
+                   [:table
+                    [:thead
+                     [:tr
+                      [:th "#"]
+                      [:th "Name"]
+                      [:th "Price"]
+                      [:th "Count"]]]
+                    [:tbody
+                     (map #(purchase-product %) purchase)]]]]]]]))))

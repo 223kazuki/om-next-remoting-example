@@ -21,15 +21,23 @@ table.list tbody tr td .add-cart:hover {
   cursor: pointer;
 }
 
-table.cart tbody tr td .remove-cart {
+div.cart {
+  min-height: 300px;
+}
+
+div.cart table tbody tr td .remove-cart {
   margin-left: 10px;
 }
 
-table.cart tbody tr td .remove-cart:hover {
+div.cart table tbody tr td .remove-cart:hover {
   cursor: pointer;
 }
 
 div.cartHeader {
   width: 100%;
   margin-bottom: 10px;
+}
+
+div.cartHeader button {
+  float: right;
 }

@@ -1,6 +1,6 @@
 (ns remoting.example.endpoint.api
   (:refer-clojure :exclude [read])
-  (:require [compojure.core :refer :all]
+  (:require [compojure.core :refer [POST]]
             [om.next.server :as om]
             [cognitect.transit :as transit]
             [remoting.example.component.datomic :as d])
@@ -21,7 +21,9 @@
                (group-by :purchase/product)
                (map (fn [m] (assoc {}
                               :purchase/product (key m)
-                              :purchase/count (reduce + (map :purchase/count (val m))))))
+                              :purchase/count   (->> (val m)
+                                                     (map :purchase/count)
+                                                     (reduce +)))))
                vec)]
     {:value v}))
 
@@ -40,7 +42,7 @@
   (om/parser {:read read :mutate mutate}))
 
 (defn handle-query [datomic req]
-  (let [query (transit/read (transit/reader (:body req) :json))
+  (let [query  (transit/read (transit/reader (:body req) :json))
         result (remote-parser {:datomic datomic} query)]
     {:status 200
      :body (let [out-stream (ByteArrayOutputStream.)]
@@ -48,5 +50,4 @@
              (.toString out-stream))}))
 
 (defn api-endpoint [{:keys [datomic]}]
-  (context "/api" []
-           (POST "/query" req (handle-query datomic req))))
+  (POST "/api/query" req (handle-query datomic req)))

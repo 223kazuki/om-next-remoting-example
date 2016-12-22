@@ -10,11 +10,11 @@
   (om/reconciler
     {:state  {}
      :parser (om/parser {:read read :mutate mutate})
-     :send   (fn [{query :remote} cb]
+     :send   (fn [{query :remote} callback]
                (.send XhrIo "/api/query"
                       (fn [e]
                         (this-as this
-                                 (cb (transit/read (transit/reader :json) (.getResponseText this)))))
+                                 (callback (transit/read (transit/reader :json) (.getResponseText this)))))
                       "POST" (transit/write (transit/writer :json) query)
                       #js {"Content-Type" "application/transit+json"}))}))
 

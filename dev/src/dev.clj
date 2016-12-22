@@ -7,8 +7,7 @@
             [com.stuartsierra.component :as component]
             [duct.util.repl :refer [setup test cljs-repl migrate rollback]]
             [duct.util.system :refer [load-system]]
-            [reloaded.repl :refer [system init start stop go reset]]
-            [alembic.still :refer [load-project]]))
+            [reloaded.repl :refer [system init start stop go reset]]))
 
 (defn new-system []
   (load-system (keep io/resource ["system.edn" "dev.edn" "local.edn"])))
