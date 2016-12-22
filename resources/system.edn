@@ -1,13 +1,15 @@
 {:components
  {:app  #var duct.component.handler/handler-component
   :http #var ring.component.jetty/jetty-server
-  :datomic remoting.example.component.datomic/datomic-component}
+  :datomic remoting.example.component.datomic/datomic-component
+  :parser remoting.example.component.parser/parser-component}
  :endpoints
  {:api #var remoting.example.endpoint.api/api-endpoint}
  :dependencies
- {:http [:app]
-  :app  [:api]
-  :api  [:datomic]}
+ {:http   [:app]
+  :app    [:api]
+  :api    [:parser]
+  :parser [:datomic]}
  :config
  {:app
   {:middleware

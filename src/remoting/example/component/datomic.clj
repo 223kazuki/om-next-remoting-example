@@ -3,17 +3,17 @@
             [com.stuartsierra.component :as component]
             [meta-merge.core :refer [meta-merge]]
             [clojure.java.io :as io]
-            [remoting.example.interface :as i])
+            [remoting.example.util :as u])
   (:import datomic.Util))
 
 (defn tempid [part]
   (d/tempid part))
 
-(defn query [this q & params]
-  (i/query* this q params))
+(defn query [component q & params]
+  (u/query* component q params))
 
-(defn transact [this transaction]
-  (i/transact* this transaction))
+(defn transact [component transaction]
+  (u/transact* component transaction))
 
 (defrecord DatomicDataSource [uri schema initial-data connection]
   component/Lifecycle
@@ -27,19 +27,19 @@
         (d/delete-database uri)
         (assoc component :connection nil))
 
-  i/IDataSource
-  (query* [{:keys [connection]} q params]
+  u/IDataSource
+  (query* [{:keys [connection] :as component} q params]
           (let [db (d/db connection)]
             (apply d/q q db params)))
 
-  (pull [{:keys [connection]} pattern eid]
+  (pull [{:keys [connection] :as component} pattern eid]
         (let [db (d/db connection)]
           (d/pull db pattern eid)))
 
-  (transact* [{:keys [connection]} transaction]
+  (transact* [{:keys [connection] :as component} transaction]
              @(d/transact connection transaction))
 
-  (resolve-tempid [{:keys [connection]} tempids tempid]
+  (resolve-tempid [{:keys [connection] :as component} tempids tempid]
                   (let [db (d/db connection)]
                     (d/resolve-tempid db tempids tempid))))
 

@@ -77,7 +77,7 @@
               [:div.container
                [:div.raw
                 [:div.col.col-md-8.list
-                 [:h2 "Products List"]
+                 [:h2 "Shopping List"]
                  [:table
                   [:thead
                    [:tr
@@ -91,7 +91,7 @@
                 [:div.col.col-md-4
                  [:div.raw
                   [:div.col.col-md-12.cart
-                   [:h2 "Cart"]
+                   [:h2 "Shopping Cart"]
                    [:div.cartHeader
                     [:label (str "Sum: $"
                                  (->> cart

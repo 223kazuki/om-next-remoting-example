@@ -1,4 +1,4 @@
-(ns remoting.example.interface)
+(ns remoting.example.util)
 
 (defprotocol ^:once IDataSource
   (query*         [this q params])

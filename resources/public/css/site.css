@@ -8,21 +8,33 @@ table thead tr th {
   border: solid;
 }
 
+table thead tr th:first-child {
+  width: 27px;
+}
+
 table tbody tr td {
   padding-left: 5px;
   border: solid;
 }
 
-table.list tbody tr td .add-cart {
+div.list table thead tr th:last-child {
+  width: 50px;
+}
+
+div.list table tbody tr td .add-cart {
   margin-left: 10px;
 }
 
-table.list tbody tr td .add-cart:hover {
+div.list table tbody tr td .add-cart:hover {
   cursor: pointer;
 }
 
 div.cart {
   min-height: 300px;
+}
+
+div.cart table thead tr th:last-child {
+  width: 50px;
 }
 
 div.cart table tbody tr td .remove-cart {
@@ -40,4 +52,8 @@ div.cartHeader {
 
 div.cartHeader button {
   float: right;
+}
+
+div.purchase table thead tr th:last-child {
+  width: 55px;
 }
