@@ -6,9 +6,10 @@
    {:functions {:stacktrace #var ring.middleware.stacktrace/wrap-stacktrace}
     :applied   ^:replace [:not-found :webjars :ring-defaults :route-aliases :stacktrace]}}
   :http
-  {:port 3000}
+  {:port 3001}
   :figwheel
-  {:css-dirs ["resources/public/css"]
+  {:server-port 3450
+   :css-dirs ["resources/public/css"]
    :builds
    [{:id "dev"
      :source-paths ["src" "dev"]

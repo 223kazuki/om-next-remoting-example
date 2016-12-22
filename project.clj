@@ -57,5 +57,5 @@
                    :resource-paths ["dev/resources"]
                    :repl-options {:init-ns user
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-                   :env {:port "3000"}}
+                   :env {:port "3001"}}
    :project/test  {}})

@@ -7,7 +7,7 @@
               [clojure.java.io :as io]))
 
 (defn -main [& args]
-  (let [bindings {'http-port (Integer/parseInt (:port env "3000"))}
+  (let [bindings {'http-port (Integer/parseInt (:port env "3001"))}
         system   (->> (load-system [(io/resource "system.edn")] bindings)
                       (component/start))]
     (add-shutdown-hook ::stop-system #(component/stop system))
