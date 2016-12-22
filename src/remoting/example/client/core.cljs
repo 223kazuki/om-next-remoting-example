@@ -21,11 +21,11 @@
                       "POST" (transit/write (transit/writer :json) query)
                       #js {"Content-Type" "application/transit+json"}))}))
 
-(defonce root (atom nil))
+(defonce mounted (atom false))
 
 (defn init! []
-  (if (nil? @root)
+  (if (nil? @mounted)
     (let [target (gdom/getElement "app")]
       (om/add-root! reconciler view/RootView target)
-      (reset! root view/RootView))
+      (reset! mounted true))
     (.forceUpdate (om/class->any reconciler view/RootView))))
