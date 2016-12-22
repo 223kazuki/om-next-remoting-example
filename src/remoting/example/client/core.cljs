@@ -6,9 +6,12 @@
             [cognitect.transit :as transit])
   (:import [goog.net XhrIo]))
 
+(defonce app-state (atom {}))
+
 (defonce reconciler
   (om/reconciler
-    {:state  {}
+    {:state  app-state
+     :normalize true
      :parser (om/parser {:read read :mutate mutate})
      :send   (fn [{query :remote} callback]
                (.send XhrIo "/api/query"
@@ -22,6 +25,7 @@
 
 (defn init! []
   (if (nil? @root)
-    (om/add-root! reconciler view/RootView
-                  (gdom/getElement "app"))
+    (let [target (gdom/getElement "app")]
+      (om/add-root! reconciler view/RootView target)
+      (reset! root view/RootView))
     (.forceUpdate (om/class->any reconciler view/RootView))))
