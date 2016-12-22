@@ -1,7 +1,5 @@
 (ns remoting.example.endpoint.api
-  (:refer-clojure :exclude [read])
   (:require [compojure.core :refer [POST]]
-            [om.next.server :as om]
             [cognitect.transit :as transit]
             [remoting.example.component.parser :as p])
   (:import [java.io ByteArrayOutputStream]))

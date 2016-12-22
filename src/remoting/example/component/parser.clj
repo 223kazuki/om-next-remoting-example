@@ -3,9 +3,7 @@
   (:require [com.stuartsierra.component :as component]
             [meta-merge.core :refer [meta-merge]]
             [om.next.server :as om]
-            [cognitect.transit :as transit]
-            [remoting.example.component.datomic :as d])
-  (:import [java.io ByteArrayOutputStream]))
+            [remoting.example.component.datomic :as d]))
 
 (defmulti read om/dispatch)
 (defmethod read :products/list
