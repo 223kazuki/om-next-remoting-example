@@ -24,7 +24,7 @@
 (defonce mounted (atom false))
 
 (defn init! []
-  (if (nil? @mounted)
+  (if-not @mounted
     (let [target (gdom/getElement "app")]
       (om/add-root! reconciler view/RootView target)
       (reset! mounted true))
